@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,17 +63,21 @@ class GroupRepository {
             profilePic,
           );
 
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
       model.Group group = model.Group(
-          senderId: auth.currentUser!.uid,
-          name: name,
-          groupId: groupId,
-          lastMessage: '',
-          groupPic: profileUrl,
-          membersUid: [
-            auth.currentUser!.uid,
-            ...uids,
-          ],
-          timeSent: DateTime.now());
+        senderId: auth.currentUser!.uid,
+        name: name,
+        groupId: groupId,
+        lastMessage: '',
+        groupPic: profileUrl,
+        membersUid: [
+          auth.currentUser!.uid,
+          ...uids,
+        ],
+        timeSent: DateTime.now(),
+        fcmToken: fcmToken!,
+      );
 
       await firestore.collection('groups').doc(groupId).set(
             group.toMap(),

@@ -17,12 +17,17 @@ class MobileChatScreen extends ConsumerWidget {
   final String uid;
   final bool isGroupChat;
   final String profilePic;
+  final String fcmToken;
+  final String ownName;
+
   const MobileChatScreen({
     Key? key,
     required this.name,
     required this.uid,
     required this.isGroupChat,
     required this.profilePic,
+    required this.fcmToken,
+    required this.ownName,
   }) : super(key: key);
 
   void makeCall(
@@ -102,6 +107,9 @@ class MobileChatScreen extends ConsumerWidget {
             BottomChatField(
               recieverUserId: uid,
               isGroupChat: isGroupChat,
+              fcmToken: fcmToken,
+              name: name,
+              ownName: ownName,
             )
           ],
         ),

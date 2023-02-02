@@ -10,7 +10,11 @@ import 'package:whatsapp_ui/models/chat_contact.dart';
 import 'package:whatsapp_ui/models/group.dart';
 
 class ContactsList extends ConsumerWidget {
-  const ContactsList({Key? key}) : super(key: key);
+  final String name;
+  const ContactsList({
+    Key? key,
+    required this.name,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,6 +31,7 @@ class ContactsList extends ConsumerWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Loader();
                 }
+
                 return ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
@@ -43,7 +48,9 @@ class ContactsList extends ConsumerWidget {
                                 'name': groupData.name,
                                 'uid': groupData.groupId,
                                 'isGroupChat': true,
-                                'profilePic': groupData.groupPic
+                                'profilePic': groupData.groupPic,
+                                'fcmToken': groupData.fcmToken,
+                                'ownName': name,
                               },
                             );
                           },
@@ -109,7 +116,9 @@ class ContactsList extends ConsumerWidget {
                                 'name': chatContactData.name,
                                 'uid': chatContactData.contactId,
                                 'isGroupChat': false,
-                                'profilePic': chatContactData.profilePic
+                                'profilePic': chatContactData.profilePic,
+                                'fcmToken': chatContactData.fcmToken,
+                                'ownName': name,
                               },
                             );
                           },

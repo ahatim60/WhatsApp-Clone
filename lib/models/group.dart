@@ -6,15 +6,18 @@ class Group {
   final String groupPic;
   final List<dynamic> membersUid;
   final DateTime timeSent;
+  final String fcmToken;
 
-  Group(
-      {required this.senderId,
-      required this.name,
-      required this.groupId,
-      required this.lastMessage,
-      required this.groupPic,
-      required this.membersUid,
-      required this.timeSent});
+  Group({
+    required this.senderId,
+    required this.name,
+    required this.groupId,
+    required this.lastMessage,
+    required this.groupPic,
+    required this.membersUid,
+    required this.timeSent,
+    required this.fcmToken,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -25,6 +28,7 @@ class Group {
       'groupPic': groupPic,
       'membersUid': membersUid,
       'timeSent': timeSent.millisecondsSinceEpoch,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -37,6 +41,7 @@ class Group {
       groupPic: map['groupPic'] ?? '',
       membersUid: List<String>.from(map['membersUid']),
       timeSent: DateTime.fromMillisecondsSinceEpoch(map['timeSent']),
+      fcmToken: map['fcmToken'] ?? '',
     );
   }
 }

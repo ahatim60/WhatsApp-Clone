@@ -52,11 +52,13 @@ class ChatRepository {
 
         contacts.add(
           ChatContact(
-              name: user.name,
-              profilePic: user.profilePic,
-              contactId: chatContact.contactId,
-              timeSent: chatContact.timeSent,
-              lastMessage: chatContact.lastMessage),
+            name: user.name,
+            profilePic: user.profilePic,
+            contactId: chatContact.contactId,
+            timeSent: chatContact.timeSent,
+            lastMessage: chatContact.lastMessage,
+            fcmToken: chatContact.fcmToken,
+          ),
         );
       }
       return contacts;
@@ -144,6 +146,7 @@ class ChatRepository {
         contactId: senderUserData.uid,
         timeSent: timeSent,
         lastMessage: text,
+        fcmToken: senderUserData.fcmToken,
       );
       await firestore
           .collection('users')
@@ -160,6 +163,7 @@ class ChatRepository {
         contactId: recieverUserData.uid,
         timeSent: timeSent,
         lastMessage: text,
+        fcmToken: recieverUserData.fcmToken,
       );
       await firestore
           .collection('users')

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,7 +82,7 @@ class AuthRepository {
         smsCode: userOTP,
       );
 
-      final cred = await auth.signInWithCredential(credential);
+      await auth.signInWithCredential(credential);
       Navigator.pushNamedAndRemoveUntil(
         context,
         UserInformationScreen.routeName,
@@ -103,6 +104,7 @@ class AuthRepository {
   }) async {
     try {
       String uid = auth.currentUser!.uid;
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
       String photoUrl =
           'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tJTIwcGVvcGxlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60';
 
@@ -122,6 +124,7 @@ class AuthRepository {
         isOnline: true,
         phoneNumber: auth.currentUser!.phoneNumber!,
         groupId: [],
+        fcmToken: fcmToken!,
       );
 
       await firestore.collection('users').doc(uid).set(
@@ -131,7 +134,10 @@ class AuthRepository {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const MobileLayoutScreen(),
+          builder: (context) => MobileLayoutScreen(
+            name: name,
+            profilePic: photoUrl,
+          ),
         ),
         (route) => false,
       );

@@ -10,6 +10,7 @@ import 'package:whatsapp_ui/common/provider/message_reply_provider.dart';
 import 'package:whatsapp_ui/common/utils/utils.dart';
 import 'package:whatsapp_ui/features/chat/controller/chat_controller.dart';
 import 'package:whatsapp_ui/features/chat/widgets/message_reply_preview.dart';
+import 'package:whatsapp_ui/services/local_notification_service.dart';
 
 import '../../../common/utils/colors.dart';
 import '../../../common/enums/message_enum.dart';
@@ -17,10 +18,16 @@ import '../../../common/enums/message_enum.dart';
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
   final bool isGroupChat;
+  final String fcmToken;
+  final String name;
+  final String ownName;
   const BottomChatField({
     Key? key,
     required this.recieverUserId,
     required this.isGroupChat,
+    required this.fcmToken,
+    required this.name,
+    required this.ownName,
   }) : super(key: key);
 
   @override
@@ -57,10 +64,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void sendTextMessage() async {
     if (isShowSendButton) {
       ref.read(chatControllerProvider).sendTextMessage(
-          context,
-          _messageController.text.trim(),
-          widget.recieverUserId,
-          widget.isGroupChat);
+            context,
+            _messageController.text.trim(),
+            widget.recieverUserId,
+            widget.isGroupChat,
+          );
       setState(() {
         _messageController.text = '';
       });
@@ -157,6 +165,14 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
+  void sendNotification() {
+    LocalNotificationService.sendNotification(
+      title: widget.ownName,
+      message: _messageController.text,
+      token: widget.fcmToken,
+    );
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -201,14 +217,20 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: toggleEmojiKeyboardContainer,
+                            onPressed: () {
+                              toggleEmojiKeyboardContainer();
+                              sendNotification();
+                            },
                             icon: const Icon(
                               Icons.emoji_emotions,
                               color: Colors.grey,
                             ),
                           ),
                           IconButton(
-                            onPressed: selectGIF,
+                            onPressed: () {
+                              selectGIF();
+                              sendNotification();
+                            },
                             icon: const Icon(
                               Icons.gif,
                               color: Colors.grey,
@@ -224,14 +246,20 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
-                          onPressed: selectImage,
+                          onPressed: () {
+                            selectImage;
+                            sendNotification();
+                          },
                           icon: const Icon(
                             Icons.camera_alt,
                             color: Colors.grey,
                           ),
                         ),
                         IconButton(
-                          onPressed: selectVideo,
+                          onPressed: () {
+                            selectVideo;
+                            sendNotification();
+                          },
                           icon: const Icon(
                             Icons.attach_file,
                             color: Colors.grey,
@@ -264,16 +292,18 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 backgroundColor: const Color(0xff128c7e),
                 radius: 25,
                 child: GestureDetector(
-                  child: Icon(
-                    isShowSendButton
-                        ? Icons.send
-                        : isRecording
-                            ? Icons.close
-                            : Icons.mic,
-                    color: Colors.white,
-                  ),
-                  onTap: sendTextMessage,
-                ),
+                    child: Icon(
+                      isShowSendButton
+                          ? Icons.send
+                          : isRecording
+                              ? Icons.close
+                              : Icons.mic,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      sendTextMessage();
+                      sendNotification();
+                    }),
               ),
             ),
           ],

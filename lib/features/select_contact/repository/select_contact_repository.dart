@@ -53,7 +53,9 @@ class SelectContactRepository {
             'name': userData.name,
             'uid': userData.uid,
             'isGroupChat': false,
-            'profilePic': userData.profilePic
+            'profilePic': userData.profilePic,
+            'fcmToken': userData.fcmToken,
+            'ownName': ''
           });
         }
       }
