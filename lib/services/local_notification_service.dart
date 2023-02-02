@@ -8,8 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
 class LocalNotificationService {
-  static String serverKey =
-      'AAAA3ENxYlE:APA91bH58Q5vCx2QKuTnxSgNTTeb9TFM0GQpos4odNKycCEOZkWgFDqrGcnzBDHdtLIV0xGmwxRtT8TuoJ7hO01KqFdwu-VajqJts3RjNnZNflFJW543paMa8bmdo_-FhfXhOgybgP9L';
+  static String serverKey = 'Your Firebase Cloud Messaging API Key';
 
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
